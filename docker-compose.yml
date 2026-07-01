@@ -1,0 +1,226 @@
+version: "3.9"
+
+services:
+
+  # ------------------------------------------------------------------
+  # Base de datos única (múltiples schemas, uno por microservicio)
+  # ------------------------------------------------------------------
+  mysql:
+    image: mysql:8.0
+    container_name: shopflow-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./crear_bases_de_datos.sql:/docker-entrypoint-initdb.d/crear_bases_de_datos.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - shopflow-net
+
+  # ------------------------------------------------------------------
+  # Service discovery
+  # ------------------------------------------------------------------
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    restart: unless-stopped
+    ports:
+      - "8761:8761"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - shopflow-net
+
+  # ------------------------------------------------------------------
+  # API Gateway
+  # ------------------------------------------------------------------
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      - eureka-server
+    networks:
+      - shopflow-net
+
+  # ------------------------------------------------------------------
+  # Microservicios
+  # ------------------------------------------------------------------
+  ms-autenticacion:
+    build: ./ms-autenticacion
+    container_name: ms-autenticacion
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - shopflow-net
+
+  ms-usuario:
+    build: ./ms-usuario
+    container_name: ms-usuario
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - shopflow-net
+
+  ms-producto:
+    build: ./ms-producto
+    container_name: ms-producto
+    restart: unless-stopped
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - shopflow-net
+
+  ms-inventario:
+    build: ./ms-inventario
+    container_name: ms-inventario
+    restart: unless-stopped
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - shopflow-net
+
+  ms-carrito:
+    build: ./ms-carrito
+    container_name: ms-carrito
+    restart: unless-stopped
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - shopflow-net
+
+  ms-orden:
+    build: ./ms-orden
+    container_name: ms-orden
+    restart: unless-stopped
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - shopflow-net
+
+  ms-pago:
+    build: ./ms-pago
+    container_name: ms-pago
+    restart: unless-stopped
+    ports:
+      - "8086:8086"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - shopflow-net
+
+  ms-envio:
+    build: ./ms-envio
+    container_name: ms-envio
+    restart: unless-stopped
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - shopflow-net
+
+  ms-notificacion:
+    build: ./ms-notificacion
+    container_name: ms-notificacion
+    restart: unless-stopped
+    ports:
+      - "8088:8088"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - shopflow-net
+
+  ms-resena:
+    build: ./ms-resena
+    container_name: ms-resena
+    restart: unless-stopped
+    ports:
+      - "8089:8089"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - shopflow-net
+
+networks:
+  shopflow-net:
+    driver: bridge
+
+volumes:
+  mysql_data:
