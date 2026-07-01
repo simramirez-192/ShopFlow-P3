@@ -60,7 +60,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: https://shopflow-eureka.onrender.com/eureka/
+      defaultZone: https://shopflow-eureka-vj13.onrender.com/eureka/
   instance:
     prefer-ip-address: false
 
