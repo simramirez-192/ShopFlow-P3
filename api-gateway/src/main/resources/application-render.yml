@@ -1,0 +1,71 @@
+server:
+  port: ${PORT:8090}
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: ms-autenticacion
+          uri: https://shopflow-ms-autenticacion.onrender.com
+          predicates:
+            - Path=/api/autenticacion/**
+
+        - id: ms-usuario
+          uri: https://shopflow-ms-usuario.onrender.com
+          predicates:
+            - Path=/api/usuarios/**
+
+        - id: ms-producto
+          uri: https://shopflow-ms-producto.onrender.com
+          predicates:
+            - Path=/api/productos/**,/api/categorias/**
+
+        - id: ms-inventario
+          uri: https://shopflow-ms-inventario.onrender.com
+          predicates:
+            - Path=/api/inventario/**
+
+        - id: ms-carrito
+          uri: https://shopflow-ms-carrito.onrender.com
+          predicates:
+            - Path=/api/carrito/**
+
+        - id: ms-orden
+          uri: https://shopflow-ms-orden.onrender.com
+          predicates:
+            - Path=/api/ordenes/**
+
+        - id: ms-pago
+          uri: https://shopflow-ms-pago.onrender.com
+          predicates:
+            - Path=/api/pagos/**
+
+        - id: ms-envio
+          uri: https://shopflow-ms-envio.onrender.com
+          predicates:
+            - Path=/api/envios/**
+
+        - id: ms-notificacion
+          uri: https://shopflow-ms-notificacion.onrender.com
+          predicates:
+            - Path=/api/notificaciones/**
+
+        - id: ms-resena
+          uri: https://shopflow-ms-resena.onrender.com
+          predicates:
+            - Path=/api/resenas/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: https://shopflow-eureka.onrender.com/eureka/
+  instance:
+    prefer-ip-address: false
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"

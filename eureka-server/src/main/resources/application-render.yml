@@ -1,0 +1,21 @@
+server:
+  port: ${PORT:8761}
+
+spring:
+  application:
+    name: eureka-server
+
+eureka:
+  instance:
+    hostname: shopflow-eureka.onrender.com
+    prefer-ip-address: false
+    non-secure-port-enabled: false
+    secure-port-enabled: true
+    secure-port: 443
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: https://shopflow-eureka.onrender.com/eureka/
+  server:
+    wait-time-in-ms-when-sync-empty: 0
