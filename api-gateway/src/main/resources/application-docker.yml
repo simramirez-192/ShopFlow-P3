@@ -1,0 +1,71 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: ms-autenticacion
+          uri: http://ms-autenticacion:8080
+          predicates:
+            - Path=/api/autenticacion/**
+
+        - id: ms-usuario
+          uri: http://ms-usuario:8081
+          predicates:
+            - Path=/api/usuarios/**
+
+        - id: ms-producto
+          uri: http://ms-producto:8082
+          predicates:
+            - Path=/api/productos/**,/api/categorias/**
+
+        - id: ms-inventario
+          uri: http://ms-inventario:8083
+          predicates:
+            - Path=/api/inventario/**
+
+        - id: ms-carrito
+          uri: http://ms-carrito:8084
+          predicates:
+            - Path=/api/carrito/**
+
+        - id: ms-orden
+          uri: http://ms-orden:8085
+          predicates:
+            - Path=/api/ordenes/**
+
+        - id: ms-pago
+          uri: http://ms-pago:8086
+          predicates:
+            - Path=/api/pagos/**
+
+        - id: ms-envio
+          uri: http://ms-envio:8087
+          predicates:
+            - Path=/api/envios/**
+
+        - id: ms-notificacion
+          uri: http://ms-notificacion:8088
+          predicates:
+            - Path=/api/notificaciones/**
+
+        - id: ms-resena
+          uri: http://ms-resena:8089
+          predicates:
+            - Path=/api/resenas/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
