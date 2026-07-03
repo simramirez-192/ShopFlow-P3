@@ -7,7 +7,7 @@ spring:
 
 eureka:
   instance:
-    hostname: shopflow-eureka-vj13.onrender.com
+    hostname: shopflow-eureka-p3.onrender.com
     prefer-ip-address: false
     non-secure-port-enabled: false
     secure-port-enabled: true
@@ -16,6 +16,6 @@ eureka:
     register-with-eureka: false
     fetch-registry: false
     service-url:
-      defaultZone: https://shopflow-eureka-vj13.onrender.com/eureka/
+      defaultZone: https://shopflow-eureka-p3.onrender.com/eureka/
   server:
     wait-time-in-ms-when-sync-empty: 0
