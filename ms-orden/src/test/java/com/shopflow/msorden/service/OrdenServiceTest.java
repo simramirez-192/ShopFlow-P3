@@ -105,7 +105,7 @@ class OrdenServiceTest {
         when(productoClient.obtenerPorId(1L)).thenReturn(
                 Map.of("id", 1L, "nombre", "Laptop Dell", "precio", "599990")
         );
-        doNothing().when(inventarioClient).ajustarStock(anyLong(), any());
+        when(inventarioClient.ajustarStock(anyLong(), any())).thenReturn(Map.of());
         when(notificacionClient.crear(any())).thenReturn(Map.of());
         when(ordenRepository.save(any(Orden.class))).thenReturn(orden);
 
